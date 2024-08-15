@@ -18,12 +18,12 @@ export class LibrosService {
     return this.librosRepository.find({ relations: ['autores', 'editorial'] });
   }
 
-findOne(id: number) {
-    return this.librosRepository.findOne({
-      where: { id_libro: id },
-      relations: ['autores', 'editorial'],
-    });
-  }
+  findOne(id: number) {
+      return this.librosRepository.findOne({
+        where: { id_libro: id },
+        relations: ['autores', 'editorial'],
+      });
+    }
 
   update(id: number, libro: Libro) {
     return this.librosRepository.update(id, libro);
@@ -32,4 +32,9 @@ findOne(id: number) {
   delete(id: number) {
     return this.librosRepository.delete(id);
   }
+
+  isValidAutor()
+
+  isValidEditorial
+
 }

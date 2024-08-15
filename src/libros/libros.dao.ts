@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OneToMany } from "typeorm";
+import { Editorial } from "src/editoriales/editoriales.entity";
 
 export class LibroDao{
 
     @ApiProperty()
     readonly id_libro?: number;
 
-    @OneToMany()
-    readonly editorial: string;
+    @ApiProperty()
+    readonly editorial: Editorial;
 
     @ApiProperty()
     readonly apellido_autor: string;

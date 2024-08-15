@@ -16,7 +16,7 @@ export class Editorial{
     @Column()
     cuit_editorial: string;
 
-    @ManyToOne( () => Libro, (libro) => Libro.editorial)
+    @ManyToOne( () => Libro, (libro) => libro.editorial)
     libros: Libro[];
 
 
