@@ -33,8 +33,8 @@ export class LibrosService {
     return this.librosRepository.delete(id);
   }
 
-  isValidAutor()
+  //isValidAutor()
 
-  isValidEditorial
+  //isValidEditorial
 
 }
