@@ -11,8 +11,7 @@ import { DatabaseModule } from './db/database.module';
 
 @Module({
   imports: [LibrosModule, AutoresModule, EditorialesModule, CategoriasModule, DatabaseModule,
-    TypeOrmModule.forRoot(
-    )
+
   ],
   controllers: [AppController],
   providers: [AppService],

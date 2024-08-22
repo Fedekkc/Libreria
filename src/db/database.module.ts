@@ -5,36 +5,21 @@ import { Autor } from 'src/autores/autores.entity';
 import { Connection } from 'typeorm';
 import { Categoria } from 'src/categorias/categorias.entity';
 import { Editorial } from 'src/editoriales/editoriales.entity';
+import  ormConfig  from './orm.config';
+
 
 @Module( 
     {
     imports:
         [
-            TypeOrmModule.forRoot
-            (
-                {
-                type: 'mysql',
-                host: 'localhost',
-                port: 3306,
-                username: 'root',
-                password: 'root',
-                database: 'libreria',
-                entities:[
-                    Autor,
-                    Libro,
-                    Categoria,
-                    Editorial
+            TypeOrmModule.forRoot(ormConfig)
 
-                ],
-                synchronize:true
-                }
-            )
         ]
     }
 )
 export class DatabaseModule {
     constructor( private readonly connection:Connection) {
-        
+        console.log(ormConfig);
     }
 
     

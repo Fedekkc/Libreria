@@ -2,13 +2,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Autor } from "./autores.entity";
 import { format } from "date-fns";
+import { AutorDao } from "./autores.dao";
 
 
 export class autoresService{
     constructor(
         @InjectRepository(Autor)
-        private autoresRepository: Repository<Autor>, 
-    ) {}
+        private autoresRepository: Repository<Autor>,
+         
+    ) {
+        console.log(autoresRepository);
+    }
 
     isDniValid(dni: string): boolean{
         if(dni.length != 8){
@@ -43,11 +47,10 @@ export class autoresService{
 
     }
 
-    
+
 
     async create(autor: Autor): Promise<void>{
-
-        await this.autoresRepository.insert(autor);                 
+        await this.autoresRepository.create(autor);                 
     }
 
     findAll():Promise<Autor[]> {

@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Param, Put, Body, Delete } from "@nestjs/common";
 import { AutorDao } from "./autores.dao";
 
+
 @Controller('autores')
 export class AutoresController {
+    
 
     autores: AutorDao[] = [];
 
@@ -19,9 +21,14 @@ export class AutoresController {
 
     @Post()
     createAutor(@Body() autor: AutorDao): AutorDao {
+        
+        
         const newAutor = { ...autor, id: '' + (this.autores.length)  }
         this.autores = [...this.autores, newAutor];
+        
         return newAutor;
+
+
         
     }
 
