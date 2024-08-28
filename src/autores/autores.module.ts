@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AutoresController } from './autores.controller';
-import { autoresService } from './autores.service';
+import { AutoresService } from './autores.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Autor } from './autores.entity';
 
@@ -8,7 +8,7 @@ import { Autor } from './autores.entity';
     imports: [TypeOrmModule.forFeature([Autor])],
     exports: [TypeOrmModule],
     controllers: [ AutoresController ],
-    providers: [autoresService]
+    providers: [AutoresService]
     
 })
 export class AutoresModule {}

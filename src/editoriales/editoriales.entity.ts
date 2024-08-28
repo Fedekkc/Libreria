@@ -1,8 +1,8 @@
 import { Libro } from "src/libros/libros.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, } from "typeorm";
 
 
-@Entity()
+@Entity({ name: 'editoriales' })
 export class Editorial{
     @PrimaryGeneratedColumn()
     id_editorial: number;
@@ -16,7 +16,7 @@ export class Editorial{
     @Column()
     cuit_editorial: string;
 
-    @ManyToOne( () => Libro, (libro) => libro.editorial)
+    @OneToMany( () => Libro, (libro) => libro.editorial) 
     libros: Libro[];
 
 

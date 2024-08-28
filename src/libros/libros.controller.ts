@@ -1,43 +1,54 @@
-import { Controller, Get, Post, Param, Put, Body, Delete } from "@nestjs/common";
-import { LibroDao } from "./libros.dao";
+import { Controller, Get, Post, Param, Put, Body, Delete, HttpException, HttpStatus } from "@nestjs/common";
+import { LibroDto } from "./libros.dto";
+import { LibrosService } from "./libros.service";
 
 @Controller('libros')
 export class LibrosController {
-
-    libros: LibroDao[] = [];
+    
+    constructor(private librosService: LibrosService) {}
 
     @Get()
-    getAllLibros(): LibroDao[] {
-        return this.libros;
+    async findAll() {
+        try {
+            return this.librosService.findAll();
+        } catch (error) {
+            throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Get(':id')
-    getLibroById(@Param('id') id: number): LibroDao {
-        const libro = this.libros.find(libro => libro.id_libro == id);
-        return libro;
+    async findOne(@Param('id') id: number) {
+        try {
+            return this.librosService.findOne(id);
+        } catch (error) {
+            throw new HttpException('ID No encontrada', HttpStatus.NOT_FOUND);
+        }
     }
 
     @Post()
-    createLibro(@Body() libro: LibroDao): LibroDao {
-        const newlibro = { ...libro, id: '' + (this.libros.length)  }
-        this.libros = [...this.libros, newlibro];
-        return newlibro;
-        
+    async create(@Body() libro: LibroDto){
+        try {
+            this.librosService.create(libro);
+        } catch (error) {
+            throw new HttpException('Consulta mal hecha', HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Put(':id')
-    updateLibro(@Param('id') id: number, @Body() libro: LibroDao): LibroDao {
-        this.libros = this.libros.filter(libro => libro.id_libro !== id);
-        this.libros = [...this.libros, this.createLibro(libro)];
-        return libro;
+    async update(@Param('id') id: number, @Body() libro: LibroDto) {
+        try {
+            this.librosService.update(id, libro);
+        } catch (error) {
+        throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Delete(':id')
-    deleteLibro(@Param('id') id: number) {
-        this.libros = this.libros.filter(libro => libro.id_libro !== id);
+    async delete(@Param('id') id: number) {
+        try {
+            this.librosService.delete(id);
+        } catch (error) {
+            throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
 }
-
-

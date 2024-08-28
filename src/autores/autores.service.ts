@@ -1,71 +1,104 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Autor } from "./autores.entity";
-import { format } from "date-fns";
-import { AutorDao } from "./autores.dao";
+import { AutorDto } from "./autores.dto";
+import { Injectable } from "@nestjs/common";
 
-
-export class autoresService{
+@Injectable()
+export class AutoresService {
     constructor(
         @InjectRepository(Autor)
         private autoresRepository: Repository<Autor>,
-         
     ) {
         console.log(autoresRepository);
     }
 
-    isDniValid(dni: string): boolean{
-        if(dni.length != 8){
+    isDniValid(dni: string): boolean {
+        if (dni.length !== 8) {
             return false;
         }
-        const re = '/^[0-9]*$/';
-        
-        if(dni.match(re))
-        {
-            return true
-        }
-        else return false;   
+        const re = /^[0-9]*$/;
 
-    }
-
-    isCuitValid(cuit: string): boolean{ //TODO: esta funcion no es de acá.
-        if(cuit.length != 11){
+        if (dni.match(re)) {
+            return true;
+        } else {
             return false;
         }
-        const re = '/^[0-9]*$/';
-        
-        if(cuit.match(re))
-        {
-            return true
+    }
+
+    isCuitValid(cuit: string): boolean {
+        if (cuit.length !== 11) {
+            return false;
         }
-        else return false;   
+        const re = /^[0-9]*$/;
 
+        if (cuit.match(re)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    formatDate(date: Date): string { //TODO: esta funcion no es de acá.
-        return format(date, 'YYYY-MM-DD');       
-
+    async findAll(): Promise<Autor[]> {
+        try {
+            return await this.autoresRepository.find();
+        } catch (error) {
+            
+            console.error("Error: ", error);
+            throw error; 
+        }
     }
 
-
-
-    async create(autor: Autor): Promise<void>{
-        await this.autoresRepository.create(autor);                 
+    async findOne(id: number): Promise<Autor | null> {
+        try {
+            return await this.autoresRepository.findOneBy({ id_autor: id });
+        } catch (error) {
+            
+            console.error("Error: ", error);
+            throw error; 
+        }
     }
 
-    findAll():Promise<Autor[]> {
-        return this.autoresRepository.find();
+    async create(autor: AutorDto): Promise<void> {
+        try {
+            console.log(autor);
+            await this.autoresRepository.insert(autor);
+        } catch (error) {
+            console.error("Error: ", error);
+            throw error;
+        }
     }
 
-    findOne(id: number):Promise<Autor | null>{
-        return this.autoresRepository.findOneBy( { id_autor: id } );
+    async remove(id: number): Promise<void> {
+        try {
+            await this.autoresRepository.delete(id);
+        } catch (error) {
+            
+            console.error("Error: ", error);
+            throw error; 
+        }
     }
-    
-    async remove(id: number): Promise<void>{
-        await this.autoresRepository.delete(id);
+
+    async update(id: number, autor: AutorDto): Promise<AutorDto> {
+        try {
+            await this.autoresRepository.update(id, autor);
+            return await this.autoresRepository.findOne( { where: { id_autor: id  } } );
+        } catch (error) {
+            console.error("Error: ", error);
+            throw error;
+        }
     }
 
-    
+    async delete(id: number): Promise<AutorDto> {
+        try {
+            await this.autoresRepository.delete(id);
+            return await this.autoresRepository.findOne( { where: { id_autor: id  } } );
 
-
+        } catch (error) {
+            console.error("Error: ", error);
+            throw error;
+        }
+    }
 }
+
+export default AutoresService;

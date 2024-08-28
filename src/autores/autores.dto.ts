@@ -1,13 +1,14 @@
+import { Inject, Injectable } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { Editorial } from "src/editoriales/editoriales.entity";
+import { Libro } from "src/libros/libros.entity";
 
-export class LibroDao{
-
-    @ApiProperty()
-    readonly id_libro?: number;
+export class AutorDto{
 
     @ApiProperty()
-    readonly editorial: Editorial;
+    readonly id_autor?: number;
+
+    @ApiProperty()
+    readonly nombre_autor: string;
 
     @ApiProperty()
     readonly apellido_autor: string;
@@ -17,5 +18,6 @@ export class LibroDao{
 
     @ApiProperty()
     readonly nacionalidad_autor: string;
+
 
 }

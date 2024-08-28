@@ -13,12 +13,8 @@ const ormConfig: DataSourceOptions = {
     database: 'test',
     sid: 'xe',
     type: 'oracle',
-    entities: [
-        Autor,
-        Libro,
-        Categoria,
-        Editorial,
-    ],
+    logging: ['error'],
+    entities: ["dist/**/*.entity{.ts,.js}"],
     synchronize: true
     
 };

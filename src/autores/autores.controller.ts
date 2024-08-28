@@ -1,48 +1,65 @@
-import { Controller, Get, Post, Param, Put, Body, Delete } from "@nestjs/common";
-import { AutorDao } from "./autores.dao";
-
+import { Controller, Get, Post, Param, Put, Body, Delete, HttpException, HttpStatus } from "@nestjs/common";
+import { AutorDto } from "./autores.dto";
+import { AutoresService } from "./autores.service";
+import { Autor } from "./autores.entity";
 
 @Controller('autores')
 export class AutoresController {
     
-
-    autores: AutorDao[] = [];
+    constructor(private autoresService: AutoresService) {}
 
     @Get()
-    getAllAutores(): AutorDao[] {
-        return this.autores;
+    async findAll() : Promise<Autor[]> {
+        try {
+            return await this.autoresService.findAll();
+        } catch (error) {
+            throw new HttpException('Error al obtener los autores', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Get(':id')
-    getAutorById(@Param('id') id: number): AutorDao {
-        const autor = this.autores.find(autor => autor.id_autor == id);
-        return autor;
+    async findOne(@Param('id') id: number) : Promise<Autor> {
+        try {
+            const autor = await this.autoresService.findOne(id);
+            if (!autor) {
+                throw new HttpException('Autor no encontrado', HttpStatus.NOT_FOUND);
+            }
+            return autor;
+        } catch (error) {
+            throw new HttpException('Error al obtener el autor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Post()
-    createAutor(@Body() autor: AutorDao): AutorDao {
-        
-        
-        const newAutor = { ...autor, id: '' + (this.autores.length)  }
-        this.autores = [...this.autores, newAutor];
-        
-        return newAutor;
-
-
-        
+    async create(@Body() autor: AutorDto) {
+        try {
+            this.autoresService.create(autor);
+        } catch (error) {
+            throw new HttpException('Error al crear el autor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Put(':id')
-    updateAutor(@Param('id') id: number, @Body() autor: AutorDao): AutorDao {
-        this.autores = this.autores.filter(autor => autor.id_autor !== id);
-        this.autores = [...this.autores, this.createAutor(autor)];
-        return autor;
+    async update(@Param('id') id: number, @Body() autor: AutorDto) : Promise<void> {
+        try {
+            const updatedAutor = await this.autoresService.update(id, autor);
+            if (!updatedAutor) {
+                throw new HttpException('Autor no encontrado', HttpStatus.NOT_FOUND);
+            }
+        } catch (error) {
+            throw new HttpException('Error al actualizar el autor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Delete(':id')
-    deleteAutor(@Param('id') id: number) {
-        this.autores = this.autores.filter(autor => autor.id_autor !== id);
+    async delete(@Param('id') id: number) : Promise<void> {
+        try {
+            const deletedAutor = await this.autoresService.delete(id);
+            if (!deletedAutor) {
+                throw new HttpException('Autor no encontrado', HttpStatus.NOT_FOUND);
+            }
+        } catch (error) {
+            throw new HttpException('Error al eliminar el autor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
 }

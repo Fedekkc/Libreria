@@ -1,41 +1,54 @@
-import { Controller, Get, Post, Param, Put, Body, Delete } from "@nestjs/common";
-import { EditorialDao } from "./editoriales.dao";
+import { Controller, Get, Post, Param, Put, Body, Delete, HttpException, HttpStatus } from "@nestjs/common";
+import { EditorialDto } from "./editoriales.dto";
+import { EditorialesService } from "./editoriales.service";
 
 @Controller('editoriales')
 export class EditorialesController {
 
-    editoriales: EditorialDao[] = [];
+    constructor(private editorialesService: EditorialesService) {}
 
     @Get()
-    getAllEditoriales(): EditorialDao[] {
-        return this.editoriales;
+    async findAll() {
+        try {
+            return this.editorialesService.findAll();
+        } catch (error) {
+            throw new HttpException('Error al obtener todas las editoriales', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Get(':id')
-    getEditorialById(@Param('id') id: number): EditorialDao {
-        const editorial = this.editoriales.find(editorial => editorial.id_editorial == id);
-        return editorial;
+    async findOne(@Param('id') id: number) {
+        try {
+            return this.editorialesService.findOne(id);
+        } catch (error) {
+            throw new HttpException('Error al obtener la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Post()
-    createEditorial(@Body() editorial: EditorialDao): EditorialDao {
-        const neweditorial = { ...editorial, id: '' + (this.editoriales.length)  }
-        this.editoriales = [...this.editoriales, neweditorial];
-        return neweditorial;
-        
+    async create(@Body() editorial: EditorialDto) {
+        try {
+            this.editorialesService.create(editorial);
+        } catch (error) {
+            throw new HttpException('Error al crear la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Put(':id')
-    updateEditorial(@Param('id') id: number, @Body() editorial: EditorialDao): EditorialDao {
-        this.editoriales = this.editoriales.filter(editorial => editorial.id_editorial !== id);
-        this.editoriales = [...this.editoriales, this.createEditorial(editorial)];
-        return editorial;
+    async update(@Param('id') id: number, @Body() editorial: EditorialDto) {
+        try {
+            this.editorialesService.update(id, editorial);
+        } catch (error) {
+            throw new HttpException('Error al actualizar la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Delete(':id')
-    deleteEditorial(@Param('id') id: number) {
-        this.editoriales = this.editoriales.filter(editorial => editorial.id_editorial !== id);
+    async delete(@Param('id') id: number) {
+        try {
+            this.editorialesService.delete(id);
+        } catch (error) {
+            throw new HttpException('Error al eliminar la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
 }

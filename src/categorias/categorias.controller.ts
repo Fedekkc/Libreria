@@ -1,27 +1,23 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { categoriasDao } from "./categorias.dao";
+import { CategoriasDto } from "./categorias.dto";
 import { Categoria } from "./categorias.entity";
-
+import { CategoriasService } from "./categorias.service";
 
 @Controller('categorias')
-export class categoriasController {
-
-    categorias: categoriasDao[] = [];
-
-    @Get()
-    getCategorias(): categoriasDao[] {
-        return this.categorias;
-
-    }
-
-    @Post()
-    createCategoria(@Body() categoria: categoriasDao ): categoriasDao {
-        const newCat = { ...categoria };
-        this.categorias = [ ...this.categorias, newCat ];
-        return newCat;
-    }
-
+export class CategoriasController {
+        
+        constructor(private categoriasService: CategoriasService) {}
     
+        @Get()
+        async findAll() : Promise<Categoria[]> | null {
+            return this.categoriasService.findAll();
+        }
+    
+        @Post()
+        async create(@Body() categoria: CategoriasDto){
+            
+            this.categoriasService.create(categoria);
+        }
 
 
 

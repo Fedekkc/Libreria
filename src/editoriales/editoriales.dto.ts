@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Libro } from "src/libros/libros.entity";
 
-export class EditorialDao{
+export class EditorialDto{
 
     @ApiProperty()
     readonly id_editorial?: number;
@@ -14,9 +14,6 @@ export class EditorialDao{
 
     @ApiProperty()
     readonly cuit_editorial: string;
-
-    @ApiProperty()
-    readonly libros: Libro[];
 
 
 }
