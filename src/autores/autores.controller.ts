@@ -13,6 +13,9 @@ export class AutoresController {
         try {
             return await this.autoresService.findAll();
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al obtener los autores', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -26,6 +29,9 @@ export class AutoresController {
             }
             return autor;
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al obtener el autor', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -35,6 +41,9 @@ export class AutoresController {
         try {
             this.autoresService.create(autor);
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al crear el autor', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -47,6 +56,9 @@ export class AutoresController {
                 throw new HttpException('Autor no encontrado', HttpStatus.NOT_FOUND);
             }
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al actualizar el autor', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -59,6 +71,9 @@ export class AutoresController {
                 throw new HttpException('Autor no encontrado', HttpStatus.NOT_FOUND);
             }
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al eliminar el autor', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

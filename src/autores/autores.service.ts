@@ -43,9 +43,8 @@ export class AutoresService {
         try {
             return await this.autoresRepository.find();
         } catch (error) {
-            
             console.error("Error: ", error);
-            throw error; 
+            throw error;
         }
     }
 
@@ -53,9 +52,8 @@ export class AutoresService {
         try {
             return await this.autoresRepository.findOneBy({ id_autor: id });
         } catch (error) {
-            
             console.error("Error: ", error);
-            throw error; 
+            throw error;
         }
     }
 
@@ -73,16 +71,15 @@ export class AutoresService {
         try {
             await this.autoresRepository.delete(id);
         } catch (error) {
-            
             console.error("Error: ", error);
-            throw error; 
+            throw error;
         }
     }
 
     async update(id: number, autor: AutorDto): Promise<AutorDto> {
         try {
             await this.autoresRepository.update(id, autor);
-            return await this.autoresRepository.findOne( { where: { id_autor: id  } } );
+            return await this.autoresRepository.findOne({ where: { id_autor: id } });
         } catch (error) {
             console.error("Error: ", error);
             throw error;
@@ -92,8 +89,7 @@ export class AutoresService {
     async delete(id: number): Promise<AutorDto> {
         try {
             await this.autoresRepository.delete(id);
-            return await this.autoresRepository.findOne( { where: { id_autor: id  } } );
-
+            return await this.autoresRepository.findOne({ where: { id_autor: id } });
         } catch (error) {
             console.error("Error: ", error);
             throw error;

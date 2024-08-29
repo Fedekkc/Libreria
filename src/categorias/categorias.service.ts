@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Categoria } from './categorias.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class CategoriasService {
@@ -14,8 +15,12 @@ export class CategoriasService {
         return this.categoriasRepository.find();
     }
 
-    async findById(id: number): Promise<Categoria | undefined> {
-        return this.categoriasRepository.findOne({ where: { id_categoria: id } });
+    async findById(id: number): Promise<Categoria> {
+        const categoria = await this.categoriasRepository.findOne({ where: { id_categoria: id } });
+        if (!categoria) {
+            throw new NotFoundException('Categoria no encontrada.');
+        }
+        return categoria;
     }
 
     async create(categoriaData: Categoria): Promise<Categoria> {
@@ -23,17 +28,17 @@ export class CategoriasService {
         return this.categoriasRepository.save(categoria);
     }
 
-    async update(id: number, categoriaData: Categoria): Promise<Categoria | undefined> { 
+    async update(id: number, categoriaData: Categoria): Promise<Categoria> { 
         const categoria = await this.findById(id);
-        if (!categoria) {
-            return undefined;
-        }
         Object.assign(categoria, categoriaData);
         return this.categoriasRepository.save(categoria);
     }
 
     async delete(id: number): Promise<boolean> {
         const result = await this.categoriasRepository.delete(id);
-        return result.affected > 0;
+        if (result.affected === 0) {
+            throw new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND);
+        }
+        return true;
     }
 }

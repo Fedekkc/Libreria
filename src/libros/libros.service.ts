@@ -29,7 +29,11 @@ export class LibrosService {
   async create(libroDto: LibroDto): Promise<Libro> {
     const libro = new Libro();
     libro.titulo = libroDto.titulo_libro;
+
     libro.precio = libroDto.precio_libro;
+    if( libroDto.fecha_lanzamiento === undefined){
+      throw new BadRequestException('La fecha de lanzamiento no puede ser nula');
+    }
     libro.fecha_lanzamiento = this.formatStringToISODate(libroDto.fecha_lanzamiento.toString());
     libro.descripcion = libroDto.descripcion_libro;
     libro.categoria = [];
@@ -50,6 +54,10 @@ export class LibrosService {
     }
 
     for (const idCategoria of libroDto.id_categorias) {
+      //Comprobar que el id sea un numero
+      if (isNaN(idCategoria)) {
+        throw new BadRequestException(`El id ${idCategoria} no es un número`);
+      }
       const categoria = await this.categoriasRepository.findOne({ where: { id_categoria: idCategoria } });
       if (!categoria) {
         throw new NotFoundException(`Categoria con id ${idCategoria} no encontrada`);

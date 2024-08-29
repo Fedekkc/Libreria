@@ -21,6 +21,9 @@ export class EditorialesController {
         try {
             return this.editorialesService.findOne(id);
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al obtener la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -30,6 +33,9 @@ export class EditorialesController {
         try {
             this.editorialesService.create(editorial);
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al crear la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -39,6 +45,9 @@ export class EditorialesController {
         try {
             this.editorialesService.update(id, editorial);
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al actualizar la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -48,6 +57,9 @@ export class EditorialesController {
         try {
             this.editorialesService.delete(id);
         } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
             throw new HttpException('Error al eliminar la editorial', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
